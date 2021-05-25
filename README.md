@@ -7,6 +7,7 @@ A Process Monitor for the Linux Operating System written in C++
 git clone https://github.com/div-sahu55/Process-Monitor.git
 cd Process-Monitor
 cmake -B build/
+cd build
 make
 ```
 <h2>To Run</h2>
