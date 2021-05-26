@@ -1,5 +1,6 @@
 #include<iostream>
 #include"SysInfo.h"
+#include"ProcessParser.h"
 int main(void){
-    std::cout<<"Hello World!\n";
+    std::cout<<ProcessParser::getVmSize("300")<<std::endl;
 }
