@@ -10,6 +10,12 @@
 #include "util.h"
 #include "constants.h"
 //methods defined for parsing data from various files of /proc.
+std::string ProcessParser::getCmd(std::string pid){
+    std::string line;
+    std::ifstream stream = Util::getStream(Path::basePath() + pid + Path::cmdPath());
+    std::getline(stream,line);
+    return line;
+}
 std::vector<std::string> ProcessParser::getPidList(){
     DIR* dir;
     std::vector<std::string> container;
@@ -52,6 +58,55 @@ std::string ProcessParser::getVmSize(std::string pid){
         }
     }
     return std::to_string(result);
+}
+int getNumberOfCores(){
+    std::string line;
+    std::string name = "cpu cores";
+    int result;
+    std::ifstream stream = Util::getStream((Path::basePath()  + Path::cpuInfo()));
+   while(std::getline(stream,line)){
+        //comparing line-by-line
+        if(line.compare(0, name.size(),name)==0){
+            std::istringstream buf(line);
+            std::istream_iterator<std::string> beg(buf),end;
+            std::vector<std::string> values(beg,end);
+            //conversion of data from kb to gb
+            result = (stoi(values[3]));
+            break;
+        }
+    }
+return result;
+}
+std::vector<std::string> ProcessParser::getSysCpuPercent(std::string coreNumber){
+    std::string line;
+    std::string name = "cpu" + coreNumber;
+    std::ifstream stream = Util::getStream((Path::basePath() + Path::statpath()));
+    while (std::getline(stream, line)) {
+        if (line.compare(0, name.size(),name) == 0) {
+            std::istringstream buf(line);
+            std::istream_iterator<std::string> beg(buf), end;
+            std::vector<std::string> values(beg, end);
+            // set of cpu data active and idle times;
+            return values;
+        }
+    }
+    return (std::vector<std::string>());
+}
+float getSysActiveCpuTime(std::vector<std::string> values)
+{
+    return (stof(values[S_USER]) +
+            stof(values[S_NICE]) +
+            stof(values[S_SYSTEM]) +
+            stof(values[S_IRQ]) +
+            stof(values[S_SOFTIRQ]) +
+            stof(values[S_STEAL]) +
+            stof(values[S_GUEST]) +
+            stof(values[S_GUEST_NICE]));
+}
+
+float getSysIdleCpuTime(std::vector<std::string>values)
+{
+    return (stof(values[S_IDLE]) + stof(values[S_IOWAIT]));
 }
 std::string ProcessParser::getCpuPercent(std::string pid){
     std::string line;
@@ -127,6 +182,17 @@ std::string ProcessParser::getProcUser(std::string pid){
        }
    }
     return result;
+}
+std::string ProcessParser::PrintCpuStats(std::vector<std::string> values1, std::vector<std::string> values2){
+    
+//Because CPU stats can be calculated only if you take measures in two different time,
+//this function has two parameters: two vectors of relevant values.
+//We use a formula to calculate overall activity of processor.
+    float activeTime = getSysActiveCpuTime(values2) - getSysActiveCpuTime(values1);
+    float idleTime = getSysIdleCpuTime(values2) - getSysIdleCpuTime(values1);
+    float totalTime = activeTime + idleTime;
+    float result = 100.0*(activeTime / totalTime);
+    return std::to_string(result);
 }
 void ProcessParser::split_string(std::string const &str, const char delim, std::vector<std::string> &out){
 
