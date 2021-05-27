@@ -3,7 +3,7 @@ class ProcessParser{
     public:
     ProcessParser();
     static std::string getCmd(std::string pid);
-    static std::vector<std::string> getPidList();
+    static std::vector<std::string> getPidList();  
     static std::string getVmSize(std::string pid);
     static std::string getCpuPercent(std::string pid);
     static long int getSysUpTime();

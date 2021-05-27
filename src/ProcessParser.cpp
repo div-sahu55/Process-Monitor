@@ -4,10 +4,34 @@
 #include <sstream>
 #include <unistd.h>
 #include <dirent.h>
+#include <cstring>
+#include <algorithm>
 #include "ProcessParser.h"
 #include "util.h"
 #include "constants.h"
 //methods defined for parsing data from various files of /proc.
+std::vector<std::string> ProcessParser::getPidList(){
+    DIR* dir;
+    std::vector<std::string> container;
+    if(!(dir=opendir("/proc")))
+        throw std::runtime_error(std::strerror(errno));
+
+        while(dirent* dirp = readdir(dir)){
+            //is this a directory?
+            if(dirp->d_type != DT_DIR)
+            continue;
+            //is every character of the name a digit?
+            if(std::all_of(dirp->d_name, dirp->d_name + std::strlen(dirp->d_name), [](char c){ return std::isdigit(c); })){
+            //above expression, basically iterates over the name of each and every file/folder in the directory
+            //and points to the beginnning and the end of the file name and then checks the lambda expression
+            // to see whether each character of the name is a digit or not.
+                container.push_back(dirp->d_name);
+            }
+        }
+        if((closedir(dir))==-1)
+            throw std::runtime_error(std::strerror(errno));
+        return container;
+}
 std::string ProcessParser::getVmSize(std::string pid){
     std::string line;
     //declaring search attribute for file
