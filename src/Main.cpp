@@ -2,5 +2,5 @@
 #include"SysInfo.h"
 #include"ProcessParser.h"
 int main(void){
-    std::cout<<ProcessParser::getVmSize("300")<<std::endl;
+    std::cout<<ProcessParser::getProcUser("1852")<<std::endl;
 }
