@@ -1,22 +1,28 @@
-#include<iostream>>
+#include<iostream>
+#include "ProcessParser.h"
 class Process{
-    private:
-    int PID;
-    std::string User;
-    std::string CMD;
-    double CPU;
-    std::string Memory;
-    std::string Time;
-    public:
-    Process();
-    void setPID(int);
-    int getPID();
-    void setUser(std::string);
-    std::string getUser();
-    void setCPU(double);
-    double getCPU();
-    void setMemory(std::string);
-    void setTime(std::string);
-    std::string getMemory();
-    std::string getTime();
+private:
+        std::string pid;
+        std::string user;
+        std::string cmd;
+        std::string cpu;
+        std::string mem;
+        std::string upTime;
+public:
+    Process(std::string pid){
+        this->pid = pid;
+        this-> user = ProcessParser::getProcUser(pid);
+        this->cmd = ProcessParser::getCmd(pid);
+        this->cpu = ProcessParser::getCpuPercent(pid);
+        this->mem = ProcessParser::getVmSize(pid);
+        this->upTime = ProcessParser::getProcUpTime(pid);
+    }
+        void setPid(int pid);
+        std::string getPid() const;
+        std::string getUser() const;
+        std::string getCmd() const;
+        int getCpu() const;
+        int getMem() const;
+        std::string getUpTime() const;
+        std::string getProcess();
 };
