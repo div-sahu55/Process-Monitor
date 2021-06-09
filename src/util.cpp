@@ -11,7 +11,7 @@ std::string Util::convertToTime(long int input_seconds){
     return result;
 }
 std::string Util::getProgressBar(std::string percent){
-    std::string result = "0%";
+    std::string result = "";
     int _size=50;
     int boundaries = (stof(percent)/100)*_size; //Parses string interpreting its content as a floating-point number
 
