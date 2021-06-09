@@ -23,7 +23,7 @@ std::vector<std::string> ProcessParser::getPidList(){
         throw std::runtime_error(std::strerror(errno));
 
         while(dirent* dirp = readdir(dir)){
-            //is this a directory?
+            //checking if is this a directory
             if(dirp->d_type != DT_DIR)
             continue;
             //is every character of the name a digit?
@@ -205,47 +205,40 @@ void ProcessParser::split_string(std::string const &str, const char delim, std::
 }
 float ProcessParser::getSysRamPercent(){
     std::string line;
-    std::ifstream stream = Util::getStream(Path::basePath() + Path::memInfoPath());
+    std::string name1 = "MemAvailable:";
+    std::string name2 = "MemFree:";
+    std::string name3 = "Buffers:";
 
-    std::string name1= "MemAvalable:";
-    std::string name2 = "MemFree";
-    std::string name3 = "Buffer:";
-
-    float totalMem=0,freeMem=0,buffers=0;
-    bool f1=false,f2=false,f3=false;
-    while(std::getline(stream,line)){
-        if(line.compare(0,name1.size(),name1)==0){
-            if(!f1){
+    std::string value;
+    int result;
+    std::ifstream stream = Util::getStream((Path::basePath() + Path::memInfoPath()));
+    float total_mem = 0;
+    float free_mem = 0;
+    float buffers = 0;
+    while (std::getline(stream, line)) {
+        if (total_mem != 0 && free_mem != 0)
+            break;
+        if (line.compare(0, name1.size(), name1) == 0) {
             std::istringstream buf(line);
-            std::istream_iterator<std::string> beg(buf),end;
-            std::vector<std::string> values(beg,end);
-            totalMem=stof(values[1]);
-            f1=true;
-            }
+            std::istream_iterator<std::string> beg(buf), end;
+            std::vector<std::string> values(beg, end);
+            total_mem = stof(values[1]);
         }
-        else if(line.compare(0,name2.size(),name2)==0){
-            if(!f2){
+        if (line.compare(0, name2.size(), name2) == 0) {
             std::istringstream buf(line);
-            std::istream_iterator<std::string> beg(buf),end;
-            std::vector<std::string> values(beg,end);
-            freeMem=stof(values[1]);
-            f2=true;
-            }
+            std::istream_iterator<std::string> beg(buf), end;
+           std::vector<std::string> values(beg, end);
+            free_mem = stof(values[1]);
         }
-        else if(line.compare(0,name3.size(),name3)==0){
-            if(!f3){
+        if (line.compare(0, name3.size(), name3) == 0) {
             std::istringstream buf(line);
-            std::istream_iterator<std::string> beg(buf),end;
-            std::vector<std::string> values(beg,end);
-            buffers=stof(values[1]);
-            f3=true;  
-            }
+            std::istream_iterator<std::string> beg(buf), end;
+            std::vector<std::string> values(beg, end);
+            buffers = stof(values[1]);
         }
-        if(f1 && f2 && f3)
-        break;
     }
-    float result = 100.0*(1-(freeMem/(totalMem-buffers)));
-    return result;
+    //calculating usage:
+    return float(100.0*(1-(free_mem/(total_mem-buffers))));
 }
 std::string ProcessParser::getSysKernelVersion(){
     std::string line = "Linux version ";
