@@ -1,4 +1,5 @@
-#include "Process.h"
+#include "ProcInfo.h"
+
 void Process::setPid(int pid)
 {
     this->pid = pid;

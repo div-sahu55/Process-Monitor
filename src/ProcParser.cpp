@@ -6,7 +6,7 @@
 #include <dirent.h>
 #include <cstring>
 #include <algorithm>
-#include "ProcessParser.h"
+#include "ProcParser.h"
 #include "util.h"
 #include "constants.h"
 //methods defined for parsing data from various files of /proc.

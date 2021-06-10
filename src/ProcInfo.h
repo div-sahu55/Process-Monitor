@@ -1,5 +1,5 @@
 #include<iostream>
-#include "ProcessParser.h"
+#include "ProcParser.h"
 class Process{
 private:
         std::string pid;

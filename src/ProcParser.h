@@ -1,3 +1,4 @@
+#pragma once
 #include<vector>
 class ProcessParser{
     public:
@@ -10,6 +11,7 @@ class ProcessParser{
     static std::string getProcUpTime(std::string pid);
     static std::string getProcUser(std::string pid);
     static std::vector<std::string> getSysCpuPercent(std::string coreNumber="");
+    static int getNumberOfCores();
     static float getSysRamPercent();
     static std::string getSysKernelVersion();
     static int getTotalThreads();
