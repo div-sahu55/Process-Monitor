@@ -4,11 +4,11 @@ class SysInfo {
         std::vector<std::string> lastCpuStats;
         std::vector<std::string> currentCpuStats;
         std::vector<std::string> cores_stats;
-        std::vector<std::vector<std::string>> lastCpuCoresStats;
-        std::vector<std::vector<std::string>> currentCpuCoresStats;
+        std::vector<std::vector<std::string>> lastCoresStats;
+        std::vector<std::vector<std::string>> currentCoresStats;
         std::string cpuPercent;
         float memPercent;
-        std::string osName;
+        std::string OSName;
         std::string kernelVer;
         long upTime;
         int totalProc;
@@ -20,11 +20,11 @@ class SysInfo {
     // Getting initial info about system
     // Initial data for individual cores is set
     // System data is set
-    this->getOtherCores(ProcessParser::getNumberOfCores());
-    this->setLastCpuMeasures();
-    this->setAttributes();
-    this->osName = ProcessParser::getOSName();
-    this->kernelVer = ProcessParser::getSysKernelVersion();
+    getOtherCores(ProcessParser::getNumberOfCores());
+    setLastCpuMeasures();
+    setAttributes();
+    OSName = ProcessParser::getOSName();
+    kernelVer = ProcessParser::getSysKernelVersion();
         }
         void setAttributes();
         void setLastCpuMeasures();
@@ -37,6 +37,6 @@ class SysInfo {
         std::string getOsName() const;
         std::string getCpuPercent() const;
         void getOtherCores(int _size);
-        void setCpuCoresStats();
+        void setCoresStats();
         std::vector<std::string> getCoresStats() const;
 };
