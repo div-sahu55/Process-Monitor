@@ -21,15 +21,15 @@ class SysInfo {
     // Initial data for individual cores is set
     // System data is set
     getOtherCores(ProcessParser::getNumberOfCores());
-    setLastCpuMeasures();
+    setLastCpuStats();
     setAttributes();
     OSName = ProcessParser::getOSName();
     kernelVer = ProcessParser::getSysKernelVersion();
         }
         void setAttributes();
-        void setLastCpuMeasures();
+        void setLastCpuStats();
         std::string getMemPercent() const;
-        long getUpTime() const;
+        long long getUpTime() const;
         std::string getThreads() const;
         std::string getTotalProc() const;
         std::string getRunningProc() const;

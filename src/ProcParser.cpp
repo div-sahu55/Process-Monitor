@@ -242,7 +242,7 @@ float ProcessParser::getSysRamPercent(){
 }
 std::string ProcessParser::getSysKernelVersion(){
     std::string line = "Linux version ";
-    std::ifstream stream = Util::getStream(Path::basePath() + Path::versionPath());
+    std::ifstream stream = Util::getStream(Path::basePath() + Path::versionPath()); // first line of /proc/version
     std::getline(stream,line);
     std::istringstream buf(line);
     std::istream_iterator<std::string> beg(buf),end;
@@ -302,18 +302,18 @@ int ProcessParser::getNumberOfRunningProcesses(){
     }
     return result;
 }
+//size_t : It is guaranteed to be big enough to contain the size of the biggest object the host system can handle
 std::string ProcessParser::getOSName(){
     std::string line;
     std::string name = "PRETTY_NAME=";
-
-    std::ifstream stream = Util::getStream(("/etc/os-release"));
+    std::ifstream stream = Util::getStream(("/etc/os-release")); // this file contains the os name in this format: PRETTY_NAME="Ubuntu 20.04.2 LTS"
 
     while (std::getline(stream, line)) {
         if (line.compare(0, name.size(), name) == 0) {
-              std::size_t found = line.find("=");
-              found++;
-              std::string result = line.substr(found);
-              result.erase(std::remove(result.begin(), result.end(), '"'), result.end());
+              std::size_t indx = line.find("=");indx++;
+              std::string result = line.substr(indx);
+              //parsing the string to get the complete os name
+              result.erase(std::remove(result.begin(), result.end(), '"'), result.end()); //complexity: O(n^2)
               return result;
         }
     }

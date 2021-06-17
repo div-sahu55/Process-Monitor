@@ -13,7 +13,7 @@ std::string SysInfo::getMemPercent() const
     return std::to_string(memPercent);
 }
 
-long SysInfo::getUpTime() const 
+long long SysInfo::getUpTime() const 
 {
     return upTime;
 }
@@ -45,21 +45,21 @@ std::string SysInfo::getOsName() const
 
 // setters:
 
-void SysInfo::setLastCpuMeasures()
+void SysInfo::setLastCpuStats()
 {
     lastCpuStats = ProcessParser::getSysCpuPercent();
 }
 
-void SysInfo::getOtherCores(int _size)
+void SysInfo::getOtherCores(int len)
 {
     //when number of cores is detected, vectors are modified to fit incoming data
     cores_stats = std::vector<std::string>();
-    cores_stats.resize(_size);
+    cores_stats.resize(len);
     lastCoresStats = std::vector<std::vector<std::string>>();
-    lastCoresStats.resize(_size);
+    lastCoresStats.resize(len);
     currentCoresStats = std::vector<std::vector<std::string>>();
-    currentCoresStats.resize(_size);
-    for (int i = 0; i < _size; i++) {
+    currentCoresStats.resize(len);
+    for (int i = 0; i < len; i++) {
         lastCoresStats[i] = ProcessParser::getSysCpuPercent(std::to_string(i));
     }
 }
@@ -92,7 +92,7 @@ void SysInfo::setAttributes()
     setCoresStats();
 }
 
-// Constructing std::string for every core data display
+// Constructing a string for every core data display
 std::vector<std::string> SysInfo::getCoresStats() const
 {
     std::vector<std::string> result = std::vector<std::string>();
