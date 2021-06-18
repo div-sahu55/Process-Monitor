@@ -1,6 +1,6 @@
 #include<iostream>
 #include "ProcParser.h"
-class Process{
+class ProcInfo{
 private:
         std::string pid;
         std::string user;
@@ -9,7 +9,7 @@ private:
         std::string mem;
         std::string upTime;
 public:
-    Process(std::string pid){
+    ProcInfo(std::string pid){
         this->pid = pid;
         user = ProcessParser::getProcUser(pid);
         cmd = ProcessParser::getCmd(pid);
@@ -19,10 +19,5 @@ public:
     }
         void setPid(int pid);
         std::string getPid() const;
-        std::string getUser() const;
-        std::string getCmd() const;
-        int getCpu() const;
-        int getMem() const;
-        std::string getUpTime() const;
         std::string getProcess();
 };
