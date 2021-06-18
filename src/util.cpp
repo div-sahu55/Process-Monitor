@@ -30,7 +30,7 @@ std::string Util::getProgressBar(std::string percent){
 std::ifstream Util::getStream(std::string path){
     std::ifstream stream(path);                           //stream object for reading ino a file.
     if(!stream){
-        throw std::runtime_error("Non Existing pid");
+        throw std::runtime_error("Non Existing pid"); // runtime error in case the path fails to open
     }
     return stream;
 }

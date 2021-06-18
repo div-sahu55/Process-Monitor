@@ -6,14 +6,14 @@ void Process::setPid(int pid)
 }
 std::string Process::getPid() const 
 {
-    return this->pid;
+    return pid;
 }
 std::string Process::getProcess()
 {
-    this->mem = ProcessParser::getVmSize(this->pid);
-    this->upTime = ProcessParser::getProcUpTime(this->pid);
-    this->cpu = ProcessParser::getCpuPercent(this->pid);
+    mem = ProcessParser::getVmSize(pid);
+    upTime = ProcessParser::getProcUpTime(pid);
+    cpu = ProcessParser::getCpuPercent(pid);
 
-    std::string res = (this->pid + "   " + this->user + "   " + this->mem.substr(0,5) + "     " + this->cpu.substr(0,5) + "     " + this->upTime.substr(0,5) + "    " + this->cmd.substr(0,30) + "...");
+    std::string res = (pid + "   " + user + "    " + mem.substr(0,5) + "     " + cpu.substr(0,5) + "     " + upTime.substr(0,5) + "    " + cmd.substr(0,30) + "...");
     return res;
 }

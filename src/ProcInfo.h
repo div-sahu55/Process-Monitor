@@ -11,11 +11,11 @@ private:
 public:
     Process(std::string pid){
         this->pid = pid;
-        this-> user = ProcessParser::getProcUser(pid);
-        this->cmd = ProcessParser::getCmd(pid);
-        this->cpu = ProcessParser::getCpuPercent(pid);
-        this->mem = ProcessParser::getVmSize(pid);
-        this->upTime = ProcessParser::getProcUpTime(pid);
+        user = ProcessParser::getProcUser(pid);
+        cmd = ProcessParser::getCmd(pid);
+        cpu = ProcessParser::getCpuPercent(pid);
+        mem = ProcessParser::getVmSize(pid);
+        upTime = ProcessParser::getProcUpTime(pid);
     }
         void setPid(int pid);
         std::string getPid() const;
