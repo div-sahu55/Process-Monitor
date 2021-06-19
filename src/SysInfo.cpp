@@ -9,7 +9,6 @@ void SysInfo::setAttributes()
     upTime = ProcessParser::getSysUpTime();
     totalProc = ProcessParser::getTotalNumberOfProcesses();
     runningProc = ProcessParser::getNumberOfRunningProcesses();
-    threads = ProcessParser::getTotalThreads();
     currentCpuStats = ProcessParser::getSysCpuPercent();
     cpuPercent = ProcessParser::PrintCpuStats(lastCpuStats,currentCpuStats);
     lastCpuStats = currentCpuStats;
@@ -86,16 +85,10 @@ std::string SysInfo::getRunningProc() const
     return std::to_string(runningProc);
 }
 
-std::string SysInfo::getThreads() const 
-{
-    return std::to_string(threads);
-}
-
 std::string SysInfo::getOsName() const 
 {
     return OSName;
 }
-
 void SysInfo::setLastCpuStats()
 {
     lastCpuStats = ProcessParser::getSysCpuPercent();
