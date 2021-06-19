@@ -30,7 +30,6 @@ class SysInfo {
         void setLastCpuStats();
         std::string getMemPercent() const;
         long long getUpTime() const;
-        std::string getThreads() const;
         std::string getTotalProc() const;
         std::string getRunningProc() const;
         std::string getKernelVersion() const;
