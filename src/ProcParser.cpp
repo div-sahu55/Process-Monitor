@@ -6,12 +6,12 @@
 #include <cstring>
 #include <algorithm>
 #include "ProcParser.h"
-#include "util.h"
-#include "constants.h"
+#include "HelperFunc.h"
+#include "Const.h"
 //methods defined for parsing data from various files of /proc.
 std::string ProcParser::getCmd(std::string pid){
     std::string str;
-    std::ifstream stream = Util::getStream(Path::basePath() + pid + Path::cmdPath());
+    std::ifstream stream = HelperFunc::getStream(Paths::basePath() + pid + Paths::cmdPath());
     std::getline(stream,str);
     return str;
 }
@@ -32,11 +32,11 @@ void ProcParser::split_string(std::string const &str, const char delim, std::vec
     }
 }
 std::vector<std::string> ProcParser::getPidList(){
-    DIR* dir = opendir("/proc");
+    DIR* dir = opendir(Paths::basePath().c_str());
     struct dirent* dir_ptr;
     std::vector<std::string> list_;
     if(!dir)
-        throw std::runtime_error("Unable to open directory: /proc");
+        throw std::runtime_error(errors::procOpen().c_str());
     else{
         while((dir_ptr = readdir (dir)) != NULL){
                  bool flag=true;
@@ -70,7 +70,7 @@ std::string ProcParser::getVmSize(std::string pid){
   
     std::string name = Names::Vm(),line;   //declaring search attribute for file
     std::vector<std::string> res;
-    std::ifstream stream = Util::getStream((Path::basePath() + pid + Path::statusPath()));   //opening stream for specific file
+    std::ifstream stream = HelperFunc::getStream((Paths::basePath() + pid + Paths::statusPath()));   //opening stream for specific file
     while(std::getline(stream,line)){
        switch(line.compare(0, name.size(),name)==0){
            case 1:  
@@ -85,7 +85,7 @@ uint8_t ProcParser::getNumberOfCores(){
     std::string name = Names::cores(),line;
     uint8_t result;
     std::vector<std::string> res;
-    std::ifstream stream = Util::getStream((Path::basePath()  + Path::cpuInfo()));
+    std::ifstream stream = HelperFunc::getStream((Paths::basePath()  + Paths::cpuInfo()));
    while(std::getline(stream,line)){
         switch(line.compare(0, name.size(),name)==0){
             case 1:
@@ -100,7 +100,7 @@ std::vector<std::string> ProcParser::getSysCpuPercent(std::string coreNumber){
     std::string line;
     std::vector<std::string> res;
     std::string name = Names::cpu() + coreNumber;
-    std::ifstream stream = Util::getStream((Path::basePath() + Path::statpath()));
+    std::ifstream stream = HelperFunc::getStream((Paths::basePath() + Paths::statpath()));
     while (std::getline(stream, line)) {
         switch(line.compare(0, name.size(),name) == 0) {
             case 1:
@@ -124,15 +124,15 @@ double getSysIdleCpuTime(std::vector<std::string>values)
 }
 long long int ProcParser::getSysUpTime(){
     std::string line;
-    std::ifstream stream = Util::getStream((Path::basePath() + Path::upTimePath()));
+    std::ifstream stream = HelperFunc::getStream((Paths::basePath() + Paths::upTimePath()));
     std::getline(stream,line);
     std::vector<std::string> res = string_sept(line);
     return stoi(res[0]);
 }
-std::string ProcParser::getProcUser(std::string pid){
+std::string ProcParser::getProcUname(std::string pid){
     std::string line,name = Names::uid(),str;
     std::vector<std::string> res;
-    std::ifstream stream1 = Util::getStream((Path::basePath()+ pid + Path::statusPath()));
+    std::ifstream stream1 = HelperFunc::getStream((Paths::basePath()+ pid + Paths::statusPath()));
     while (std::getline(stream1,line)){
         switch(line.compare(0, name.size(),name)==0){
             case 1:
@@ -142,7 +142,7 @@ std::string ProcParser::getProcUser(std::string pid){
             case 0: continue;
         }
     }
-   std::ifstream stream2 = Util::getStream(Path::getPass());
+   std::ifstream stream2 = HelperFunc::getStream(Paths::getPass());
    line = "";
    const char delim = ':';
    std::vector<std::string> splits;
@@ -170,7 +170,7 @@ std::string ProcParser::PrintCpuStats(std::vector<std::string> values1, std::vec
 }
 double ProcParser::getSysRamPercent(){
     std::string name1 = Names::ram1(),name2 = Names::ram2(),name3 = Names::ram3(),line,value;
-    std::ifstream stream = Util::getStream((Path::basePath() + Path::memInfoPath()));
+    std::ifstream stream = HelperFunc::getStream((Paths::basePath() + Paths::memInfoPath()));
     double total_mem = 0,buffers = 0,free_mem = 0;
     while (std::getline(stream, line)){
         if(total_mem != 0 && free_mem != 0)
@@ -191,9 +191,9 @@ double ProcParser::getSysRamPercent(){
     //calculating usage:
     return double(100.0*(1-(free_mem/(total_mem-buffers))));
 }
-std::string ProcParser::getSysKernelVersion(){
+std::string ProcParser::getKernelVer(){
     std::string line = "";
-    std::ifstream stream = Util::getStream(Path::basePath() + Path::versionPath()); // first line of /proc/version
+    std::ifstream stream = HelperFunc::getStream(Paths::basePath() + Paths::versionPath()); // first line of /proc/version
     std::getline(stream,line);
     std::vector<std::string> res = string_sept(line);
     return res[2];
@@ -202,7 +202,7 @@ uint32_t ProcParser::getTotalNumberOfProcesses(){
     std::string line,name = Names::procs1();
     uint32_t result = 0;
     std::vector<std::string> res;
-    std::ifstream stream = Util::getStream((Path::basePath() + Path::statpath()));
+    std::ifstream stream = HelperFunc::getStream((Paths::basePath() + Paths::statpath()));
     while (std::getline(stream, line)) {
         switch(line.compare(0, name.size(), name) == 0) {
             case 1:
@@ -218,7 +218,7 @@ uint16_t ProcParser::getNumberOfRunningProcesses(){
     std::string line,name = Names::procs2();
     uint16_t result = 0;
     std::vector<std::string> res;
-    std::ifstream stream = Util::getStream((Path::basePath() + Path::statpath()));
+    std::ifstream stream = HelperFunc::getStream((Paths::basePath() + Paths::statpath()));
     while (std::getline(stream, line)) {
         switch (line.compare(0, name.size(), name) == 0) {
             case 1:
@@ -230,10 +230,10 @@ uint16_t ProcParser::getNumberOfRunningProcesses(){
     }
     return result;
 }
-std::string ProcParser::getOSName(){
+std::string ProcParser::getOS(){
     std::string line,name = Names::os(),result="";
     unsigned long long int indx=0;
-    std::ifstream stream = Util::getStream(Path::OSinfo()); // this file contains the os name in this format: PRETTY_NAME="Ubuntu 20.04.2 LTS"
+    std::ifstream stream = HelperFunc::getStream(Paths::OSinfo()); // this file contains the os name in this format: PRETTY_NAME="Ubuntu 20.04.2 LTS"
     while (std::getline(stream, line)) {
         switch(line.compare(0, name.size(), name) == 0) {
               case 1:

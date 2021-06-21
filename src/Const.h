@@ -1,18 +1,5 @@
-#pragma once
 #include<string>
-enum CPUStates{
-    S_USER = 1,
-    S_NICE,
-    S_SYSTEM,
-    S_IDLE,
-    S_IOWAIT,
-    S_IRQ,
-    S_SOFTIRQ,
-    S_STEAL,
-    S_GUEST,
-    S_GUEST_NICE
-};
-class Path{
+class Paths{
     public:
     static std::string basePath(){ 
         return "/proc/";         // /proc is a Virtual File System. Contained within the proc file system are information about processes and other system information.
@@ -82,4 +69,31 @@ class Names{
     static std::string ram3(){
         return ("Buffers:");
     }
+};
+class errors{
+    public:
+    static std::string procOpen(){
+        std::string err = "Unable to open directory: /proc";
+        return err;
+    }
+    static std::string invalidPID(){
+        std::string err = "Unknown PID, please try re-running the program.";
+        return err;
+    }
+    static std::string noColors(){
+        std::string err = "Terminal does not support colors!";
+        return err;
+    }
+};
+enum CPUStates{
+    S_USER = 1,
+    S_NICE,
+    S_SYSTEM,
+    S_IDLE,
+    S_IOWAIT,
+    S_IRQ,
+    S_SOFTIRQ,
+    S_STEAL,
+    S_GUEST,
+    S_GUEST_NICE
 };

@@ -1,21 +1,21 @@
 #include <iostream>
 #include <unistd.h>
 #include <ncurses.h>
-#include "util.h"
+#include "Const.h"
+#include "HelperFunc.h"
 #include "DataControl.h"
-void DisplaySys(SysInfo sys, WINDOW* systemw);
+void DisplaySys(DataInit sys, WINDOW* systemw);
 void DisplayProc(DataInit procs,WINDOW* win);
 
 int main(int argc, char *argv[] ){
 
 if(!has_colors()){
-        printw("Terminal does not support colors!");
-        getch();
+        std::runtime_error(errors::noColors().c_str());
     }
      //Object which contains list of current processes, Container for Process Class
     DataInit proc;
     // Object which containts relevant methods and attributes regarding system details
-    SysInfo sys;
+    DataInit sys;
         initscr(); // start curses mode
     noecho(); // not printing input values
     cbreak(); // Terminating on ctrl + c
@@ -46,23 +46,23 @@ if(!has_colors()){
     endwin();
     return 0;
 }
-/*---------------------------------------Functions for terminal display using ncurses---------------------------------------*/
+/*---------------------------------------Functions for terminal display ---------------------------------------*/
 
 //function for displaying system information (top window)
-void DisplaySys(SysInfo sys, WINDOW* systemw){
+void DisplaySys(DataInit sys, WINDOW* systemw){
     
     //initializing system info to the variables
-    sys.setAttributes();
+    sys.setAttr();
     //temprorary string variables to contain complete string.
-    std::string temp1 = ( "|| OS: " + sys.getOsName() + "  ||");
-    std::string temp2 = ( "Kernel version: " + sys.getKernelVersion() + "  ||");
+    std::string temp1 = ( "|| OS: " + sys.getOs() + "  ||");
+    std::string temp2 = ( "Kernel version: " + sys.getKernelVer() + "  ||");
     std::string temp3 =  "CPU[%]: ";
-    std::string temp4 = Util::getProgressBar(sys.getCpuPercent());
+    std::string temp4 = HelperFunc::getProgressBar(sys.getCpuPercent());
     std::string temp5 = ( "Other cores:");
     std::string temp7 = ( "Memory[%]: ");
     std::string t1 = ( "Total Processes:" + sys.getTotalProc());
     std::string t2 = ( "Running Processes:" + sys.getRunningProc());
-    std::string t3 = ( "Up Time: " + Util::getTime(sys.getUpTime()));
+    std::string t3 = ( "Up Time: " + HelperFunc::getTime(sys.getUpTime()));
 
     //converting the temp string variables to const char * using c_str() to match the arguments of print functions
      wattron(systemw,COLOR_PAIR(2));
@@ -84,7 +84,7 @@ void DisplaySys(SysInfo sys, WINDOW* systemw){
     wattroff(systemw,COLOR_PAIR(3));
     mvwprintw(systemw,10,2,temp7.c_str());
     wattron(systemw,COLOR_PAIR(1));
-    std::string temp8 = Util::getProgressBar(sys.getMemPercent());
+    std::string temp8 = HelperFunc::getProgressBar(sys.getMemPercent());
     wprintw(systemw,temp8.c_str());
     wattroff(systemw,COLOR_PAIR(1));
 
@@ -96,7 +96,7 @@ void DisplaySys(SysInfo sys, WINDOW* systemw){
 //function for displaying process info (bottom window)
 void DisplayProc(DataInit procs,WINDOW* win){
 
-    procs.refreshList();
+    procs.reloadList();
     int yMax,xMax;
     getmaxyx(stdscr,yMax,xMax);
     wattron(win,COLOR_PAIR(2));

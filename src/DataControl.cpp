@@ -1,22 +1,22 @@
 #include "DataControl.h"
-#include "util.h"
+#include "HelperFunc.h"
 void ProcData::setPid(int pid){
-    this->pids = pid;
+    this->pID = pid;
 }
 std::string ProcData::getPid() const{
-    return this->pids;
+    return this->pID;
 }
 std::string ProcData::getProcess(){
-    mem = ProcParser::getVmSize(pids);
+    ram = ProcParser::getVmSize(pID);
     //generate a complete string with all the process info
-    std::string res = (pids + "   " + user + "    " + mem.substr(0,5)  + "    " + cmd.substr(0,40) + "...");
+    std::string res = (pID + "   " + uname + "    " + ram.substr(0,5)  + "    " + cmd.substr(0,40) + "...");
     return res;
 }
-void DataInit::refreshList(){
-    std::vector<std::string> pids = ProcParser::getPidList();
-    //deleting all the previosly stored pids
+void DataInit::reloadList(){
+    std::vector<std::string> pID = ProcParser::getPidList();
+    //deleting all the previosly stored pID
     this->list_.clear();
-    for(auto pid : pids){
+    for(auto pid : pID){
         ProcData proc(pid); // passing pid value to the object
         this->list_.push_back(proc);
     }
@@ -36,12 +36,12 @@ std::vector<std::string> DataInit::getList(){
     return values;
 }
 // getters and setters:
-void SysInfo::setAttributes(){
+void SysInfo::setAttr(){
     // getting parsed data
     memPercent = ProcParser::getSysRamPercent();
     upTime = ProcParser::getSysUpTime();
-    totalProc = ProcParser::getTotalNumberOfProcesses();
-    runningProc = ProcParser::getNumberOfRunningProcesses();
+    totalProcs = ProcParser::getTotalNumberOfProcesses();
+    runningProcs = ProcParser::getNumberOfRunningProcesses();
     currentCpuStats = ProcParser::getSysCpuPercent();
     cpuPercent = ProcParser::PrintCpuStats(lastCpuStats,currentCpuStats);
     lastCpuStats = currentCpuStats;
@@ -80,7 +80,7 @@ std::vector<std::string> SysInfo::getCoresStats() const{
         if (!check || cores_stats[i] == "nan") {
             return std::vector<std::string>();
         }
-        temp += Util::getProgressBar(cores_stats[i]);
+        temp += HelperFunc::getProgressBar(cores_stats[i]);
         result.push_back(temp);
     }
     return result;
@@ -91,19 +91,19 @@ std::string SysInfo::getCpuPercent() const{
 std::string SysInfo::getMemPercent() const{
     return std::to_string(memPercent);
 }
-long long int SysInfo::getUpTime() const{
+unsigned long long int SysInfo::getUpTime() const{
     return upTime;
 }
-std::string SysInfo::getKernelVersion() const{
+std::string DataInit::getKernelVer() const{
     return kernelVer;
 }
 std::string SysInfo::getTotalProc() const{
-    return std::to_string(totalProc);
+    return std::to_string(totalProcs);
 }
 std::string SysInfo::getRunningProc() const{
-    return std::to_string(runningProc);
+    return std::to_string(runningProcs);
 }
-std::string SysInfo::getOsName() const{
+std::string DataInit::getOs() const{
     return OSName;
 }
 void SysInfo::setLastCpuStats(){
