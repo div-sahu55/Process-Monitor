@@ -1,6 +1,5 @@
 #pragma once
 #include<string>
-
 enum CPUStates{
     S_USER = 1,
     S_NICE,
@@ -43,5 +42,44 @@ class Path{
     }
     static std::string cpuInfo(){
         return "cpuinfo";
+    }
+    static std::string OSinfo(){
+        return "/etc/os-release";
+    }
+    static std::string getPass(){
+        return "/etc/passwd";
+    }
+};
+class Names{
+    public:
+    static std::string Vm(){
+        return ("VmData");
+    }
+    static std::string cores(){
+        return ("cpu cores");
+    }
+    static std::string cpu(){
+        return ("cpu");
+    }
+    static std::string uid(){
+        return ("Uid:");
+    }
+    static std::string procs1(){
+        return ("processes");
+    }
+    static std::string procs2(){
+        return ("procs_running");
+    }
+    static std::string os(){
+        return ("PRETTY_NAME=");
+    }
+    static std::string ram1(){
+        return ("MemAvailable:");
+    }
+    static std::string ram2(){
+        return ("MemFree:");
+    }
+    static std::string ram3(){
+        return ("Buffers:");
     }
 };
